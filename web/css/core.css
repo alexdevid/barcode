@@ -1,0 +1,9 @@
+.form-submit {
+	margin-top: 25px;
+	display: block;
+	padding: 9px 20px;
+	float: right;
+}
+#canvas {
+	border: 2px solid #999;
+}

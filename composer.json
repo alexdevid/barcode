@@ -1,0 +1,9 @@
+{
+	"config": {
+	},
+	"require": {
+		"yiisoft/yii": "dev-master",
+		"borales/yii-pdf": "dev-master"
+	},
+	"minimum-stability": "dev"
+}

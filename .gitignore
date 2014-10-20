@@ -1,0 +1,9 @@
+/nbproject/
+/vendor/
+/assets/*
+/userfiles/*
+/protected/runtime/*
+/vendor/
+/protected/composer.lock
+/protected/config/db.php
+composer.phar
