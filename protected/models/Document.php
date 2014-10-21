@@ -18,7 +18,7 @@ class Document extends BaseModel
 	const TYPE_PNG = 'image/png';
 	const TYPE_JPEG = 'image/jpeg';
 
-	public $displayWidth = 400;
+	public $displayWidth = 500;
 	public $barcode = NULL;
 
 	/**
@@ -80,14 +80,14 @@ class Document extends BaseModel
 		return self::FILE_DIR . $this->id . DIRECTORY_SEPARATOR . 'barcode.png';
 	}
 
-	public function generateBarcode($height = 150)
+	public function generateBarcode()
 	{
 		$this->resizeImage(1500);
 
-		$height = (int) $this->getDocumentHeight() / 8;
-		$fontSize = (int) $this->getDocumentHeight() / 8 / 10;
+		$height = 120;
+		$fontSize = 12;
 		$barcode = new Barcode($this->generateCode(), $height, Yii::getPathOfAlias('webroot.web.fonts') . '/OpenSans-Regular.ttf', $fontSize);
-		$barcode->setPixelWidth($this->getResizeRatio() * 0.5009);
+		$barcode->setPixelWidth(1);
 		$barcode->saveBarcode(Yii::getPathOfAlias('webroot') . Document::FILE_DIR . $this->id . DIRECTORY_SEPARATOR . 'barcode.png');
 	}
 
