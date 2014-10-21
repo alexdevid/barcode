@@ -43,6 +43,7 @@ namespace :deploy do
   #end
 
   task :migrate do
+    run "ln -nfs #{shared_path}/db.php #{latest_release}/protected/config/db.php"
     run "#{latest_release}/protected/yiic migrate --interactive=0"
   end
 
