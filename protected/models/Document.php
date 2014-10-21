@@ -41,7 +41,6 @@ class Document extends BaseModel
 		$im->clear();
 		$im->destroy();
 		return $this->document . '.jpg';
-
 	}
 
 	public function getResizeRatio()
@@ -83,11 +82,20 @@ class Document extends BaseModel
 
 	public function generateBarcode($height = 150)
 	{
+		$this->resizeImage(1500);
+
 		$height = (int) $this->getDocumentHeight() / 8;
 		$fontSize = (int) $this->getDocumentHeight() / 8 / 10;
 		$barcode = new Barcode($this->generateCode(), $height, Yii::getPathOfAlias('webroot.web.fonts') . '/OpenSans-Regular.ttf', $fontSize);
 		$barcode->setPixelWidth($this->getResizeRatio() * 0.5009);
 		$barcode->saveBarcode(Yii::getPathOfAlias('webroot') . Document::FILE_DIR . $this->id . DIRECTORY_SEPARATOR . 'barcode.png');
+	}
+
+	public function resizeImage($maxDimensions = 1500)
+	{
+		$image = new Imagick($this->getDocumentImagePath());
+		$image->scaleImage($maxDimensions, $maxDimensions, true);
+		$image->writeimage($this->getDocumentImagePath());
 	}
 
 	/**
@@ -118,8 +126,8 @@ class Document extends BaseModel
 			array('org_id, doc_id, document', 'length', 'max' => 255),
 			array('document', 'file', 'types' => 'jpg, png, pdf'),
 			array('org_id, doc_id', 'match',
-                'pattern' => '/^[a-zA-Z0-9-_\s]+$/',
-                'message' => '{attribute} может содержать только латинские буквы и цифры'),
+				'pattern' => '/^[a-zA-Z0-9-_\s]+$/',
+				'message' => '{attribute} может содержать только латинские буквы и цифры'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('id, org_id, doc_id, document, created_at', 'safe', 'on' => 'search'),
