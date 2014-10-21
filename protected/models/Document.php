@@ -86,7 +86,7 @@ class Document extends BaseModel
 		$height = (int) $this->getDocumentHeight() / 8;
 		$fontSize = (int) $this->getDocumentHeight() / 8 / 10;
 		$barcode = new Barcode($this->generateCode(), $height, Yii::getPathOfAlias('webroot.web.fonts') . '/OpenSans-Regular.ttf', $fontSize);
-		$barcode->setPixelWidth($this->getResizeRatio() * 0.75);
+		$barcode->setPixelWidth($this->getResizeRatio() * 0.5009);
 		$barcode->saveBarcode(Yii::getPathOfAlias('webroot') . Document::FILE_DIR . $this->id . DIRECTORY_SEPARATOR . 'barcode.png');
 	}
 

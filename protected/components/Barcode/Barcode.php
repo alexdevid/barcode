@@ -66,10 +66,10 @@ class Barcode {
         $this->setText($text);
 
         //some default parameters which can be overridden with the public methods
-        $this->setBorderWidth(2);
+        $this->setBorderWidth(0);
         $this->setBorderSpacing(10);
         $this->setPixelWidth(1);
-        $this->setEanStyle(true);
+        $this->setEanStyle(false);
         $this->setShowText(true);
         $this->setAutoAdjustFontSize(false);
         $this->setTextSpacing(5);
@@ -271,6 +271,11 @@ class Barcode {
         if($this->getShowText() <> false) {
             $this->drawText();
         }
+
+		$white = imagecolorallocate($this->image->image, 255, 255, 255);
+		imagecolortransparent($this->image->image, $white);
+
+
     }
 
     function drawBorder() {
@@ -336,8 +341,15 @@ class Barcode {
         //draws the text on the image
         $image = &$this->image;
         $black = '00000000';
-        $image->drawText(((($this->getImageWidth() - $this->bbox['width']) / 2) - abs($this->bbox['x'])), $this->getImageHeight() - abs($this->bbox[1]) - $this->getBorderWidth() - $this->getBorderSpacing(), 0, $this->getFont(), $this->getFontSize(), $black, $this->getText());
-    }
+        $text = $image->drawText(
+				//((($this->getImageWidth() - $this->bbox['width']) / 2) - abs($this->bbox['x'])),
+				($this->getImageWidth() - $this->bbox['width']) / 2,
+				$this->getImageHeight() - abs($this->bbox[1]) - $this->getBorderWidth() - $this->getBorderSpacing(),
+				0, $this->getFont(),
+				$this->getFontSize(),
+				$black,
+				$this->getText());
+	}
 
     function imagettfbboxextended($size, $font, $text) {
         $bbox = imagettfbbox($size, 0, $font, $text);
@@ -373,6 +385,7 @@ class Barcode {
             }
         }
         $this->bbox = $bbox;
+
         return $i;
     }
 
