@@ -29,9 +29,6 @@ $(function() {
 					var centerX = (this.background.width / this.resizeRatio) / 2 - (this.barcode.width / this.resizeRatio) / 2;
 					var centerY = (this.background.height / this.resizeRatio) / 2 - (this.barcode.height / this.resizeRatio) / 2;
 
-					this.ctx.drawImage(this.background, 0, 0, this.background.width / this.resizeRatio, this.background.height / this.resizeRatio);
-					this.ctx.drawImage(this.barcode, centerX, centerY, this.barcode.width / this.resizeRatio, this.barcode.height / this.resizeRatio);
-
 				}).apply(this);
 
 				// !?
@@ -43,17 +40,15 @@ $(function() {
 				this.canvasHeight = canvas.height;
 
 				this.isDragging = false;
-				this.canMouseX = 1;
-				this.canMouseY = 1;
-				this.coords = {x: 50, y: 50};
+				this.coords = {
+					x: this.canvasWidth / 2 - this.barcode.width / this.resizeRatio / 2,
+					y: this.canvasHeight / 2 - this.barcode.height / this.resizeRatio / 2
+				};
 				this.angle = 0;
 
-				this.bindEvents();
+				this.bindEvents().run();
 
-				var _this = this;
-				window.setInterval(function() {
-					_this.updateCanvas();
-				}, 10);
+
 
 			}).apply(this);
 		}
@@ -62,98 +57,86 @@ $(function() {
 		 *
 		 * @returns {undefined}
 		 */
+		Barcode.prototype.run = function() {
+
+			var _this = this;
+
+			(function animloop() {
+				requestAnimFrame(animloop);
+				_this.updateCanvas();
+			})();
+
+			return this;
+		};
+
+		/**
+		 *
+		 * @returns {undefined}
+		 */
 		Barcode.prototype.bindEvents = function() {
 
+			/**
+			 *
+			 */
 			$('#canvas').mousedown($.proxy(function(e) {
-				this.handleMouseDown(e);
+				this.isDragging = true;
 			}, this));
-
-			$('#canvas').mousemove($.proxy(function(e) {
-				this.handleMouseMove(e);
-			}, this));
-
+			/**
+			 *
+			 */
 			$('#canvas').mouseup($.proxy(function(e) {
-				this.handleMouseUp(e);
+				this.isDragging = false;
 			}, this));
-
+			/**
+			 *
+			 */
 			$('#canvas').mouseout($.proxy(function(e) {
-				this.handleMouseOut(e);
+				this.isDragging = false;
+			}, this));
+			/**
+			 *
+			 */
+			$('#canvas').mousemove($.proxy(function(e) {
+				if (this.isDragging) {
+					$('#canvas').css('cursor', 'all-scroll');
+					this.coords = {
+						x: parseInt(e.clientX - this.offsetX + window.pageXOffset) - this.barcode.width / this.resizeRatio / 2,
+						y: parseInt(e.clientY - this.offsetY + window.pageYOffset) - this.barcode.height / this.resizeRatio / 2
+					};
+					console.log(this.coords);
+				} else {
+					$('#canvas').css('cursor', 'default');
+				}
 			}, this));
 
+			/**
+			 *
+			 */
 			$('#save').click($.proxy(function(e) {
 				var dataURL = this.getBarcodedImage();
-				$(this).attr('href', dataURL);
+				$('#save').attr('href', dataURL);
 			}, this));
 
+			/**
+			 *
+			 */
 			$('#print').click($.proxy(function(e) {
+				e.preventDefault();
 				var dataURL = this.getBarcodedImage();
 				var image = window.open();
-				window.document.write('<img src="' + dataURL + '"/>');
+				image.document.write('<img src="' + dataURL + '"/>');
 				image.print();
 			}, this));
 
+			/**
+			 *
+			 */
 			$('#rotate').click($.proxy(function(e) {
 				e.preventDefault();
 				this.angle += 90;
-				this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
-				this.ctx.drawImage(this.background, 0, 0, this.background.width / this.resizeRatio, this.background.height / this.resizeRatio);
-				this.ctx.save();
-				this.ctx.translate(this.canvasWidth / 2, this.canvasHeight / 2);
-				this.ctx.rotate(this.angle * Math.PI / 180);
-				this.ctx.drawImage(this.barcode, -this.barcode.width / this.resizeRatio / 2, -this.barcode.height / this.resizeRatio / 2, this.barcode.width / this.resizeRatio, this.barcode.height / this.resizeRatio);
-				this.ctx.restore();
 			}, this));
 
-		};
-
-		/**
-		 *
-		 * @param {event} e
-		 * @returns {undefined}
-		 */
-		Barcode.prototype.handleMouseDown = function(e) {
-			this.canMouseX = parseInt(e.clientX - this.offsetX);
-			this.canMouseY = parseInt(e.clientY - this.offsetY);
-
-			this.isDragging = true;
-		};
-
-		/**
-		 *
-		 * @param {event} e
-		 * @returns {undefined}
-		 */
-		Barcode.prototype.handleMouseUp = function(e) {
-			this.canMouseX = parseInt(e.clientX - this.offsetX);
-			this.canMouseY = parseInt(e.clientY - this.offsetY);
-
-			this.isDragging = false;
-		};
-
-		/**
-		 *
-		 * @param {event} e
-		 * @returns {undefined}
-		 */
-		Barcode.prototype.handleMouseOut = function(e) {
-			this.canMouseX = parseInt(e.clientX - this.offsetX);
-			this.canMouseY = parseInt(e.clientY - this.offsetY);
-			
-			this.isDragging = false;
-		};
-
-		/**
-		 *
-		 * @param {event} e
-		 * @returns {undefined}
-		 */
-		Barcode.prototype.handleMouseMove = function(e) {
-
-			if (this.isDragging) {
-				this.canMouseX = parseInt(e.clientX - this.offsetX);
-				this.canMouseY = parseInt(e.clientY - this.offsetY);
-			}
-
+			return this;
 		};
 
 		/**
@@ -163,9 +146,14 @@ $(function() {
 		Barcode.prototype.getBarcodedImage = function() {
 			var canvas = document.getElementById("hidden");
 			var ctx = canvas.getContext("2d");
-			var ratio = this.resizeRatio;
-			this.ctx.drawImage(this.background, 0, 0, this.background.width, this.background.height);
-			ctx.drawImage(this.barcode, this.coords.x * ratio, this.coords.y * ratio, this.barcode.width, this.barcode.height);
+
+			ctx.drawImage(this.background, 0, 0, this.background.width, this.background.height);
+			ctx.drawImage(
+					this.barcode,
+					this.coords.x * this.resizeRatio,
+					this.coords.y * this.resizeRatio,
+					this.barcode.width, this.barcode.height);
+
 			return canvas.toDataURL("image/jpg");
 		}
 
@@ -174,18 +162,24 @@ $(function() {
 		 * @returns {undefined}
 		 */
 		Barcode.prototype.updateCanvas = function() {
+
 			this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
-			this.ctx.drawImage(this.background, 0, 0, this.background.width / this.resizeRatio, this.background.height / this.resizeRatio);
+
+			this.ctx.drawImage(
+					this.background, 0, 0,
+					this.background.width / this.resizeRatio,
+					this.background.height / this.resizeRatio);
+
 			this.ctx.save();
-			this.ctx.translate(this.canvasWidth / 2, this.canvasHeight / 2);
+			//this.ctx.translate(this.canvasWidth / 2, this.canvasHeight / 2);
 			this.ctx.rotate(this.angle * Math.PI / 180);
 
-			this.coords = {
-				x: this.canMouseX - this.barcode.width / this.resizeRatio / 2,
-				y: this.canMouseY - this.barcode.height / this.resizeRatio / 2
-			};
+			this.ctx.drawImage(
+					this.barcode,
+					this.coords.x, this.coords.y,
+					this.barcode.width / this.resizeRatio,
+					this.barcode.height / this.resizeRatio);
 
-			this.ctx.drawImage(this.barcode, this.coords.x, this.coords.y, this.barcode.width / this.resizeRatio, this.barcode.height / this.resizeRatio);
 			this.ctx.restore();
 		};
 
@@ -194,4 +188,15 @@ $(function() {
 
 	var Screen = new Barcode('canvas', resizeRatio, backgroundSrc, barcodeSrc);
 
+	$('[data-toggle="popover"]').popover({container: 'body'});
+
 });
+
+window.requestAnimFrame = (function() {
+	return  window.requestAnimationFrame ||
+			window.webkitRequestAnimationFrame ||
+			window.mozRequestAnimationFrame ||
+			function(callback) {
+				window.setTimeout(callback, 1000 / 60);
+			};
+})();

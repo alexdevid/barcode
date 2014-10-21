@@ -10,3 +10,15 @@
 	background-repeat: no-repeat;
 	background-position: center center;
 }
+canvas#hidden {
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+.btn-group-vertical > .btn {
+}
+.btn-info:active {
+	background-color: #3498db;
+	border-color: #3498db;
+}

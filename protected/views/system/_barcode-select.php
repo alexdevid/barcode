@@ -28,13 +28,20 @@
 	</div>
 	<div class="col-md-3">
 		<div class="">
-			<button class="btn btn-default" id="rotate">Повернуть штрих-код</button>
-			<br><br>
-			<a href="#" class="btn btn-success" id="save" download>Скачать <i class="glyphicon glyphicon-download-alt"></i></a>
-			<br><br>
-			<a href="#" class="btn btn-info" id="print">Печатать <i class="glyphicon glyphicon-print"></i></a>
-			<br><br>
-			<a href="<?= Yii::app()->createUrl('system/index'); ?>" class="btn btn-primary" id="print">Сделать еще <i class="glyphicon glyphicon-repeat"></i></a>
+			<div class="btn-group-vertical">
+				<button class="btn btn-info" id="rotate" data-toggle="popover" data-placement="right" data-trigger="hover" data-content="Повернуть штрих-код">
+					<i class="glyphicon glyphicon-repeat"></i>
+				</button>
+				<a href="#" class="btn btn-info" id="save" data-toggle="popover" data-placement="right" data-trigger="hover" data-content="Скачать" download="<?= $model->generateCode(); ?>">
+					<i class="glyphicon glyphicon-save"></i>
+				</a>
+				<a href="#" class="btn btn-info" id="print" data-toggle="popover" data-placement="right" data-trigger="hover" data-content="Печатать">
+					<i class="glyphicon glyphicon-print"></i>
+				</a>
+				<a href="<?= Yii::app()->createUrl('system/index'); ?>" class="btn btn-success" id="print" data-toggle="popover" data-placement="right" data-trigger="hover" data-content="Сделать еще">
+					<i class="glyphicon glyphicon-plus"></i>
+				</a>
+			</div>
 		</div>
 	</div>
 </div>

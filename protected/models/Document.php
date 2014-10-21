@@ -93,7 +93,7 @@ class Document extends BaseModel
 	/**
 	 * @return string
 	 */
-	protected function generateCode()
+	public function generateCode()
 	{
 		$code = "";
 		if (strlen($this->doc_id) > 10) {
