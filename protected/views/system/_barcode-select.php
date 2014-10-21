@@ -20,6 +20,7 @@
 			 width='<?= $model->getDocumentWidth(); ?>'
 			 height='<?= $model->getDocumentHeight(); ?>'
 			 id="document" class="hidden">
+
 		<canvas id="hidden" class="hidden" width="<?= $model->getDocumentWidth(); ?>" height="<?= $model->getDocumentHeight(); ?>"></canvas>
 		<canvas id="canvas"
 				width='<?= $model->getDocumentWidth() / $model->getResizeRatio(); ?>'
@@ -42,6 +43,8 @@
 					<i class="glyphicon glyphicon-plus"></i>
 				</a>
 			</div>
+			<hr />
+			<canvas id="rotated" class=""></canvas>
 		</div>
 	</div>
 </div>

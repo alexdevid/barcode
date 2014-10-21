@@ -126,7 +126,30 @@ $(function() {
 			$('#rotate').click($.proxy(function(e) {
 				e.preventDefault();
 				this.angle += 90;
-				console.log(this.ctx);
+
+				var canvas = document.getElementById('rotated');
+				var ctx = canvas.getContext('2d')
+
+				var width, height;
+				var image = new Image();
+				image.src = barcodeSrc;
+
+				var _this = this;
+				image.onload = function() {
+					width = image.width;
+					height = image.height;
+
+					canvas.width = image.width;
+					canvas.height = image.width;
+
+					ctx.clearRect(0, 0, canvas.width, canvas.height);
+					ctx.save();
+					ctx.translate(canvas.width / 2, canvas.height / 2);
+					ctx.rotate(_this.angle * Math.PI / 180);
+					ctx.drawImage(image, -image.width / 2, -image.height / 2);
+					ctx.restore();
+				};
+
 
 			}, this));
 
