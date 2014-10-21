@@ -24,13 +24,6 @@ $(function() {
 
 			this.background.onload = (function() {
 
-				this.barcode.onload = (function() {
-
-					var centerX = (this.background.width / this.resizeRatio) / 2 - (this.barcode.width / this.resizeRatio) / 2;
-					var centerY = (this.background.height / this.resizeRatio) / 2 - (this.barcode.height / this.resizeRatio) / 2;
-
-				}).apply(this);
-
 				// !?
 				this.canvasOffset = $("#canvas").offset();
 				this.offsetX = this.canvasOffset.left;
@@ -42,7 +35,7 @@ $(function() {
 				this.isDragging = false;
 				this.coords = {
 					x: this.canvasWidth / 2 - this.barcode.width / this.resizeRatio / 2,
-					y: this.canvasHeight / 2 - this.barcode.height / this.resizeRatio / 2
+					y: 50
 				};
 				this.angle = 0;
 
@@ -103,7 +96,6 @@ $(function() {
 						x: parseInt(e.clientX - this.offsetX + window.pageXOffset) - this.barcode.width / this.resizeRatio / 2,
 						y: parseInt(e.clientY - this.offsetY + window.pageYOffset) - this.barcode.height / this.resizeRatio / 2
 					};
-					console.log(this.coords);
 				} else {
 					$('#canvas').css('cursor', 'default');
 				}
@@ -134,6 +126,8 @@ $(function() {
 			$('#rotate').click($.proxy(function(e) {
 				e.preventDefault();
 				this.angle += 90;
+				console.log(this.ctx);
+
 			}, this));
 
 			return this;
@@ -171,8 +165,9 @@ $(function() {
 					this.background.height / this.resizeRatio);
 
 			this.ctx.save();
-			//this.ctx.translate(this.canvasWidth / 2, this.canvasHeight / 2);
-			this.ctx.rotate(this.angle * Math.PI / 180);
+
+//			this.ctx.translate(this.coords.x + this.barcode.width / this.resizeRatio, this.coords.y + this.barcode.height / this.resizeRatio);
+//			this.ctx.rotate(this.angle * Math.PI / 180);
 
 			this.ctx.drawImage(
 					this.barcode,
