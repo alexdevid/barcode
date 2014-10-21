@@ -5,7 +5,7 @@ Yii::setPathOfAlias('vendor', $_SERVER['DOCUMENT_ROOT'] . '/vendor');
 return array(
 	'basePath' => dirname(__FILE__) . DIRECTORY_SEPARATOR . '..',
 	'name' => 'Barcode Generator',
-	'language' => 'en',
+	'language' => 'ru',
 	// preloading 'log' component
 	'preload' => array(
 		'log',

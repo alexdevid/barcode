@@ -11,7 +11,7 @@ $(function() {
 		barcode.onload = function() {
 			var centerX = (background.width / resizeRatio) / 2 - (barcode.width / resizeRatio) / 2;
 			var centerY = (background.height / resizeRatio) / 2 - (barcode.height / resizeRatio) / 2;
-			
+
 			ctx.drawImage(background, 0, 0, background.width / resizeRatio, background.height / resizeRatio);
 			ctx.drawImage(barcode, centerX, centerY, barcode.width / resizeRatio, barcode.height / resizeRatio);
 		};
@@ -91,6 +91,19 @@ $(function() {
 			var image = window.open();
 			window.document.write('<img src="' + dataURL + '"/>');
 			image.print();
+		});
+		var angle = 0;
+
+		$('#rotate').click(function(e) {
+			e.preventDefault();
+			angle += 90;
+			ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+			ctx.drawImage(background, 0, 0, background.width / resizeRatio, background.height / resizeRatio);
+			ctx.save();
+			ctx.translate(canvasWidth / 2, canvasHeight / 2);
+			ctx.rotate(angle * Math.PI / 180);
+			ctx.drawImage(barcode, -barcode.width / resizeRatio / 2, -barcode.height / resizeRatio / 2, barcode.width, barcode.height);
+			ctx.restore();
 		});
 	};
 

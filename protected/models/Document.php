@@ -117,6 +117,9 @@ class Document extends BaseModel
 			array('created_at', 'numerical', 'integerOnly' => true),
 			array('org_id, doc_id, document', 'length', 'max' => 255),
 			array('document', 'file', 'types' => 'jpg, png, pdf'),
+			array('org_id, doc_id', 'match',
+                'pattern' => '/^[a-zA-Z0-9-_\s]+$/',
+                'message' => '{attribute} может содержать только латинские буквы и цифры'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('id, org_id, doc_id, document, created_at', 'safe', 'on' => 'search'),
