@@ -28,6 +28,8 @@
 	</div>
 	<div class="col-md-3">
 		<div class="">
+			<button class="btn btn-default" id="rotate">Повернуть штрих-код</button>
+			<br><br>
 			<a href="#" class="btn btn-success" id="save" download>Скачать <i class="glyphicon glyphicon-download-alt"></i></a>
 			<br><br>
 			<a href="#" class="btn btn-info" id="print">Печатать <i class="glyphicon glyphicon-print"></i></a>
@@ -37,11 +39,13 @@
 	</div>
 </div>
 <script>
-	var documentSrc = "<?= $model->getDocumentImage(); ?>";
+	var backgroundSrc = "<?= $model->getDocumentImage(); ?>";
 	var barcodeSrc = "<?= $model->getBarcodeImage(); ?>";
 
 	var documentWidth = <?= $model->getDocumentWidth(); ?>;
 	var documentHeight = <?= $model->getDocumentHeight(); ?>;
 
 	var resizeRatio = <?= $model->getResizeRatio(); ?>
+
+
 </script>

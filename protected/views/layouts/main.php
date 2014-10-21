@@ -3,7 +3,6 @@
         <title>Barcode Generator</title>
 		<?php Yii::app()->clientScript->registerPackage('bootstrap'); ?>
 		<?php Yii::app()->clientScript->registerCssFile('/web/css/core.css'); ?>
-		<?php Yii::app()->clientScript->registerScriptFile('/web/js/html2canvas.js', CClientScript::POS_END); ?>
 		<?php Yii::app()->clientScript->registerScriptFile('/web/js/canvas.js', CClientScript::POS_END); ?>
     </head>
     <body>
