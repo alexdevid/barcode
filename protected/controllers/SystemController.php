@@ -11,6 +11,7 @@
  *
  * @author dev
  */
+
 class SystemController extends BaseController
 {
 
@@ -32,6 +33,7 @@ class SystemController extends BaseController
 				if ($model->isPdf()) {
 					$model->document = $model->generateFromPDF();
 				}
+
 				$model->generateBarcode();
 			}
 		}
