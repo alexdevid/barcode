@@ -77,48 +77,79 @@
 		return Barcode;
 	})();
 
-	var Scenes = [];
+	if (runCanvas) {
 
-	for (var i = 0; i < Images.length; i++) {
-		Scenes.push(new Barcode('canvas_' + i, resizeRatio, Images[i]));
-	}
-	var ActiveScene = Scenes[0];
+		var Scenes = [];
 
-	$('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
-		ActiveScene = Scenes[$(e.target).attr('data-id')];
-	});
+		for (var i = 0; i < Images.length; i++) {
+			Scenes.push(new Barcode('canvas_' + i, resizeRatio, Images[i]));
+		}
+		var ActiveScene = Scenes[0];
 
-	/**
-	 *
-	 */
-	$('#save').click(function(e) {
-		e.preventDefault();
-		var image = window.open();
-		image.document.write('<img src="' + ActiveScene.getBarcodedImage() + '"/>');
-	});
-
-	/**
-	 *
-	 */
-	$('#print').click(function(e) {
-		e.preventDefault();
-		var image = window.open();
-		image.document.write('<img src="' + ActiveScene.getBarcodedImage() + '"/>');
-		image.print();
-
-	});
-
-	/**
-	 *
-	 */
-	$('#rotate').click(function(e) {
-		e.preventDefault();
-
-		ActiveScene.BarcodeImage.animate('angle', '+=90', {
-			onChange: ActiveScene.Canvas.renderAll.bind(ActiveScene.Canvas),
-			duration: 100
+		$('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+			ActiveScene = Scenes[$(e.target).attr('data-id')];
 		});
 
+		/**
+		 *
+		 */
+		$('#save').click(function(e) {
+			e.preventDefault();
+			var image = window.open();
+			image.document.write('<img src="' + ActiveScene.getBarcodedImage() + '"/>');
+		});
+
+		/**
+		 *
+		 */
+		$('#print').click(function(e) {
+			e.preventDefault();
+			var image = window.open();
+			image.document.write('<img src="' + ActiveScene.getBarcodedImage() + '"/>');
+			image.print();
+
+		});
+
+		/**
+		 *
+		 */
+		$('#rotate').click(function(e) {
+			e.preventDefault();
+
+			ActiveScene.BarcodeImage.animate('angle', '+=90', {
+				onChange: ActiveScene.Canvas.renderAll.bind(ActiveScene.Canvas),
+				duration: 100
+			});
+
+		});
+
+		$('#saveBulk').click(function(e) {
+			e.preventDefault();
+
+			var images = [];
+			for (var i = 0; i < Scenes.length; i++) {
+				images.push(Scenes[i].getBarcodedImage());
+			}
+
+			$.ajax({
+				method: 'POST',
+				url: '/system/save',
+				data: {
+					id: uid,
+					images: images
+				},
+				success: function(data) {
+					window.location.assign(data);
+				}
+			});
+
+		});
+	}
+
+	$('#uploadBtn').click(function(e) {
+		e.preventDefault();
+		$(this).find('.glyphicon').removeClass('glyphicon-upload').addClass('glyphicon-refresh').addClass('rotate');
+		$('#upload-form').submit();
 	});
 
 	$('[data-toggle="popover"]').popover({container: 'body'});

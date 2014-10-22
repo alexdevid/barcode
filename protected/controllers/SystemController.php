@@ -11,7 +11,6 @@
  *
  * @author dev
  */
-
 class SystemController extends BaseController
 {
 
@@ -34,11 +33,33 @@ class SystemController extends BaseController
 		$this->render('form', ['model' => $model]);
 	}
 
-	public function actionTest()
+	public function actionSave()
 	{
-		$barcode = new Barcode('M0GL900412AA1', 150, Yii::getPathOfAlias('webroot.web.fonts') . '/OpenSans-Regular.ttf', 18);
-		$barcode->saveBarcode(Yii::getPathOfAlias('webroot.userfiles') . '/1.png');
-		$this->render('index');
+		$data = $_POST;
+		$images = $data['images'];
+		$webDir = Document::FILE_DIR . $data['id'] . DIRECTORY_SEPARATOR;
+		$dir = Yii::getPathOfAlias('webroot') . Document::FILE_DIR . $data['id'] . DIRECTORY_SEPARATOR;
+
+
+		$zip = new ZipArchive();
+		$filename = $dir . "archive.zip";
+
+		if ($zip->open($filename, ZipArchive::CREATE) !== TRUE) {
+			throw new CHttpException('500', 'Can not open ZIP Archive');
+		}
+
+		for ($i = 0; $i < count($images); $i++) {
+			$images[$i] = str_replace('data:image/jpeg;base64,', '', $images[$i]);
+			$images[$i] = str_replace(' ', '+', $images[$i]);
+			$data = base64_decode($images[$i]);
+
+			$zip->addFromString('b' . $i . '.jpg', $data);
+		}
+
+		$zip->close();
+
+		echo $webDir . "archive.zip";
+		Yii::app()->end();
 	}
 
 	/**

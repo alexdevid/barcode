@@ -47,14 +47,13 @@
 				<a href="#" class="btn btn-info" id="print" data-toggle="popover" data-placement="right" data-trigger="hover" data-content="Печатать страницу">
 					<i class="glyphicon glyphicon-print"></i>
 				</a>
-				<!--
-				<a href="#" class="btn btn-info" id="save" data-toggle="popover" data-placement="right" data-trigger="hover" data-content="Скачать все архивом" download="<?= $model->generateCode(); ?>">
+				<a href="#" class="btn btn-info" id="saveBulk" data-toggle="popover" data-placement="right" data-trigger="hover" data-content="Скачать все архивом" download="<?= $model->generateCode(); ?>">
 					<i class="glyphicon glyphicon-compressed"></i>
 				</a>
-				-->
 				<a href="<?= Yii::app()->createUrl('system/index'); ?>" class="btn btn-success" id="print" data-toggle="popover" data-placement="right" data-trigger="hover" data-content="Сделать еще">
 					<i class="glyphicon glyphicon-plus"></i>
 				</a>
+				<iframe id="downloadArchive" style="display:none"></iframe>
 			</div>
 		</div>
 	</div>
@@ -65,5 +64,7 @@
 			"<?= $image; ?>",
 <?php endforeach; ?>
 	];
-	var resizeRatio = <?= $model->getResizeRatio(); ?>
+	var resizeRatio = <?= $model->getResizeRatio(); ?>;
+	var uid = <?= $model->id; ?>;
+	var runCanvas = true;
 </script>

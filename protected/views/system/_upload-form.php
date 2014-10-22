@@ -23,7 +23,9 @@
 			</div>
 		</div>
 		<div class="col-md-4 text-right">
-			<?php echo CHtml::submitButton('Отправить', ['class' => 'btn btn-primary form-submit', 'id' => 'uploadBtn']); ?>
+			<button class='btn btn-primary form-submit' id='uploadBtn'>
+				Отправить <i class='glyphicon glyphicon-upload'></i>
+			</button>
 		</div>
 	</div>
 	<?php $this->endWidget();
@@ -34,3 +36,6 @@
 		<?php echo $form->errorSummary($model, '', '', array('class' => 'alert alert-danger')); ?>
 	<?php endif; ?>
 </div>
+<script>
+	var runCanvas = false;
+</script>
