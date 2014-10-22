@@ -19,8 +19,11 @@
 			this.angle = 0;
 			this.resizeRatio = ratio;
 
-			this.Canvas = new fabric.Canvas(canvasId, {
-				backgroundImage: this.backgroundImage()
+			this.Canvas = new fabric.Canvas(canvasId);
+
+			this.Canvas.setBackgroundImage(backgroundSrc, this.Canvas.renderAll.bind(this.Canvas), {
+				width: this.Canvas.width,
+				height: this.Canvas.height
 			});
 
 			this.BarcodeImage = this.barcodeImage();
@@ -28,19 +31,6 @@
 
 			this.bindEvents();
 		}
-
-		Barcode.prototype.backgroundImage = function() {
-
-			var DocumentElement = document.getElementById('document');
-			var Document = new fabric.Image(DocumentElement, {
-				left: 0,
-				top: 0,
-				width: DocumentElement.width / this.resizeRatio,
-				height: DocumentElement.height / this.resizeRatio
-			});
-
-			return Document;
-		};
 
 		Barcode.prototype.barcodeImage = function() {
 
@@ -117,7 +107,7 @@
 		return Barcode;
 	})();
 
-	var Screen = new Barcode('canvas', resizeRatio);
+	new Barcode('canvas', resizeRatio);
 
 	$('[data-toggle="popover"]').popover({container: 'body'});
 
