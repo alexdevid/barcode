@@ -15,6 +15,10 @@ return array(
             'connectionID' => 'db',
         ),
     ),
+	'import' => [
+		'application.components.BaseModel',
+		'application.models.Document'
+	],
     // application components
     'components' => array(
         'db' => require_once 'db.php',

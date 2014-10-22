@@ -1,6 +1,7 @@
 <?php
 
 Yii::setPathOfAlias('vendor', $_SERVER['DOCUMENT_ROOT'] . '/vendor');
+Yii::setPathOfAlias('userfiles', $_SERVER['DOCUMENT_ROOT'] . '/userfiles');
 
 return array(
 	'basePath' => dirname(__FILE__) . DIRECTORY_SEPARATOR . '..',

@@ -1,65 +1,63 @@
-$(function() {
+(function() {
 
 	/**
 	 *
 	 * @type Function|_L6.Barcode
 	 */
 	var Barcode = (function() {
+
 		/**
 		 * Constructor
 		 * @param {type} message
 		 * @returns {undefined}
 		 */
-		function Barcode(canvasId, resizeRatio, backgroundSrc, barcodeSrc) {
+		function Barcode(canvasId, ratio) {
 
-			this.canvasId = canvasId;
-			this.resizeRatio = resizeRatio;
-			this.background = new Image();
-			this.barcode = new Image();
-			this.canvas = document.getElementById(canvasId);
-			this.ctx = this.canvas.getContext("2d");
+			this.BarcodeImage = null;
+			this.Canvas = null;
+			this.resizeRatio = ratio;
+			this.angle = 0;
+			this.resizeRatio = ratio;
 
-			this.background.src = backgroundSrc;
-			this.barcode.src = barcodeSrc;
+			this.Canvas = new fabric.Canvas(canvasId, {
+				backgroundImage: this.backgroundImage()
+			});
 
-			this.background.onload = (function() {
+			this.BarcodeImage = this.barcodeImage();
+			this.Canvas.add(this.BarcodeImage);
 
-				// !?
-				this.canvasOffset = $("#canvas").offset();
-				this.offsetX = this.canvasOffset.left;
-				this.offsetY = this.canvasOffset.top;
-
-				this.canvasWidth = canvas.width;
-				this.canvasHeight = canvas.height;
-
-				this.isDragging = false;
-				this.coords = {
-					x: this.canvasWidth / 2 - this.barcode.width / this.resizeRatio / 2,
-					y: 50
-				};
-				this.angle = 0;
-
-				this.bindEvents().run();
-
-
-
-			}).apply(this);
+			this.bindEvents();
 		}
 
-		/**
-		 *
-		 * @returns {undefined}
-		 */
-		Barcode.prototype.run = function() {
+		Barcode.prototype.backgroundImage = function() {
 
-			var _this = this;
+			var DocumentElement = document.getElementById('document');
+			var Document = new fabric.Image(DocumentElement, {
+				left: 0,
+				top: 0,
+				width: DocumentElement.width / this.resizeRatio,
+				height: DocumentElement.height / this.resizeRatio
+			});
 
-			(function animloop() {
-				requestAnimFrame(animloop);
-				_this.updateCanvas();
-			})();
+			return Document;
+		};
 
-			return this;
+		Barcode.prototype.barcodeImage = function() {
+
+			var BarcodeElement = document.getElementById('barcode');
+			var BarcodeImage = new fabric.Image(BarcodeElement, {
+				left: (this.Canvas.width) / 2,
+				top: 50,
+				width: BarcodeElement.width / this.resizeRatio,
+				height: BarcodeElement.height / this.resizeRatio,
+				lockScalingX: true,
+				lockScalingY: true,
+				hasControls: false,
+				originX: 'center',
+				originY: 'center'
+			});
+
+			return BarcodeImage;
 		};
 
 		/**
@@ -71,42 +69,10 @@ $(function() {
 			/**
 			 *
 			 */
-			$('#canvas').mousedown($.proxy(function(e) {
-				this.isDragging = true;
-			}, this));
-			/**
-			 *
-			 */
-			$('#canvas').mouseup($.proxy(function(e) {
-				this.isDragging = false;
-			}, this));
-			/**
-			 *
-			 */
-			$('#canvas').mouseout($.proxy(function(e) {
-				this.isDragging = false;
-			}, this));
-			/**
-			 *
-			 */
-			$('#canvas').mousemove($.proxy(function(e) {
-				if (this.isDragging) {
-					$('#canvas').css('cursor', 'all-scroll');
-					this.coords = {
-						x: parseInt(e.clientX - this.offsetX + window.pageXOffset) - this.barcode.width / this.resizeRatio / 2,
-						y: parseInt(e.clientY - this.offsetY + window.pageYOffset) - this.barcode.height / this.resizeRatio / 2
-					};
-				} else {
-					$('#canvas').css('cursor', 'default');
-				}
-			}, this));
-
-			/**
-			 *
-			 */
 			$('#save').click($.proxy(function(e) {
-				var dataURL = this.getBarcodedImage();
-				$('#save').attr('href', dataURL);
+				e.preventDefault();
+				var image = window.open();
+				image.document.write('<img src="' + this.getBarcodedImage() + '"/>');
 			}, this));
 
 			/**
@@ -114,10 +80,10 @@ $(function() {
 			 */
 			$('#print').click($.proxy(function(e) {
 				e.preventDefault();
-				var dataURL = this.getBarcodedImage();
 				var image = window.open();
-				image.document.write('<img src="' + dataURL + '"/>');
+				image.document.write('<img src="' + this.getBarcodedImage() + '"/>');
 				image.print();
+
 			}, this));
 
 			/**
@@ -125,31 +91,11 @@ $(function() {
 			 */
 			$('#rotate').click($.proxy(function(e) {
 				e.preventDefault();
-				this.angle += 90;
 
-				var canvas = document.getElementById('rotated');
-				var ctx = canvas.getContext('2d')
-
-				var width, height;
-				var image = new Image();
-				image.src = barcodeSrc;
-
-				var _this = this;
-				image.onload = function() {
-					width = image.width;
-					height = image.height;
-
-					canvas.width = image.width;
-					canvas.height = image.width;
-
-					ctx.clearRect(0, 0, canvas.width, canvas.height);
-					ctx.save();
-					ctx.translate(canvas.width / 2, canvas.height / 2);
-					ctx.rotate(_this.angle * Math.PI / 180);
-					ctx.drawImage(image, -image.width / 2, -image.height / 2);
-					ctx.restore();
-				};
-
+				this.BarcodeImage.animate('angle', '+=90', {
+					onChange: this.Canvas.renderAll.bind(this.Canvas),
+					duration: 100
+				});
 
 			}, this));
 
@@ -161,60 +107,18 @@ $(function() {
 		 * @returns {String}
 		 */
 		Barcode.prototype.getBarcodedImage = function() {
-			var canvas = document.getElementById("hidden");
-			var ctx = canvas.getContext("2d");
-
-			ctx.drawImage(this.background, 0, 0, this.background.width, this.background.height);
-			ctx.drawImage(
-					this.barcode,
-					this.coords.x * this.resizeRatio,
-					this.coords.y * this.resizeRatio,
-					this.barcode.width, this.barcode.height);
-
-			return canvas.toDataURL("image/jpg");
-		}
-
-		/**
-		 *
-		 * @returns {undefined}
-		 */
-		Barcode.prototype.updateCanvas = function() {
-
-			this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
-
-			this.ctx.drawImage(
-					this.background, 0, 0,
-					this.background.width / this.resizeRatio,
-					this.background.height / this.resizeRatio);
-
-			this.ctx.save();
-
-//			this.ctx.translate(this.coords.x + this.barcode.width / this.resizeRatio, this.coords.y + this.barcode.height / this.resizeRatio);
-//			this.ctx.rotate(this.angle * Math.PI / 180);
-
-			this.ctx.drawImage(
-					this.barcode,
-					this.coords.x, this.coords.y,
-					this.barcode.width / this.resizeRatio,
-					this.barcode.height / this.resizeRatio);
-
-			this.ctx.restore();
+			return this.Canvas.toDataURL({
+				format: 'jpeg',
+				quality: 1,
+				multiplier: this.resizeRatio
+			});
 		};
 
 		return Barcode;
 	})();
 
-	var Screen = new Barcode('canvas', resizeRatio, backgroundSrc, barcodeSrc);
+	var Screen = new Barcode('canvas', resizeRatio);
 
 	$('[data-toggle="popover"]').popover({container: 'body'});
 
-});
-
-window.requestAnimFrame = (function() {
-	return  window.requestAnimationFrame ||
-			window.webkitRequestAnimationFrame ||
-			window.mozRequestAnimationFrame ||
-			function(callback) {
-				window.setTimeout(callback, 1000 / 60);
-			};
 })();

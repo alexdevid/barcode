@@ -21,7 +21,6 @@
 			 height='<?= $model->getDocumentHeight(); ?>'
 			 id="document" class="hidden">
 
-		<canvas id="hidden" class="hidden" width="<?= $model->getDocumentWidth(); ?>" height="<?= $model->getDocumentHeight(); ?>"></canvas>
 		<canvas id="canvas"
 				width='<?= $model->getDocumentWidth() / $model->getResizeRatio(); ?>'
 				height='<?= $model->getDocumentHeight() / $model->getResizeRatio(); ?>'
@@ -44,7 +43,7 @@
 				</a>
 			</div>
 			<hr />
-			<canvas id="rotated" class=""></canvas>
+			<canvas id="rotated" class="hidden"></canvas>
 		</div>
 	</div>
 </div>
