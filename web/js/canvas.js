@@ -11,7 +11,7 @@
 		 * @param {type} message
 		 * @returns {undefined}
 		 */
-		function Barcode(canvasId, ratio) {
+		function Barcode(canvasId, ratio, backgroundSrc) {
 
 			this.BarcodeImage = null;
 			this.Canvas = null;
@@ -35,7 +35,7 @@
 			var BarcodeElement = document.getElementById('barcode');
 
 			var _this = this;
-			var BarcodeImage = fabric.Image.fromURL(barcodeSrc, function(Image) {
+			fabric.Image.fromURL(BarcodeElement.src, function(Image) {
 				Image.setOptions({
 					left: (_this.Canvas.width) / 2,
 					top: 50,
@@ -111,11 +111,9 @@
 		return Barcode;
 	})();
 
-	if (document.getElementById('canvas')) {
-		new Barcode('canvas', resizeRatio);
+	for (var i = 0; i < Images.length; i++) {
+		new Barcode('canvas_' + i, resizeRatio, Images[i]);
 	}
-
-
 	$('[data-toggle="popover"]').popover({container: 'body'});
 
 })();

@@ -16,10 +16,22 @@
 		</div>
 	</div>
 	<div class="col-md-6 text-center">
-		<canvas id="canvas"
-				width='<?= $model->getDocumentWidth() / $model->getResizeRatio(); ?>'
-				height='<?= $model->getDocumentHeight() / $model->getResizeRatio(); ?>'
-				>Установите нормальный браузер</canvas>
+		<ul class="nav nav-tabs" role="tablist">
+			<?php $images = $model->getImages(); ?>
+			<?php for ($i = 0; $i < count($images); $i++): ?>
+				<li class="<?= $i == 0 ? 'active' : ''; ?>"><a href="#page_<?= $i; ?>" role="tab" data-toggle="tab"><?= $i; ?></a></li>
+			<?php endfor; ?>
+		</ul>
+		<div class="tab-content">
+			<?php for ($a = 0; $a < count($images); $a++): ?>
+				<div class="tab-pane <?= ($a == 0) ? 'active' : ''; ?>" id="page_<?= $i; ?>">
+					<canvas id="canvas_<?= $a; ?>"
+							width='<?= $model->getDocumentWidth() / $model->getResizeRatio(); ?>'
+							height='<?= $model->getDocumentHeight() / $model->getResizeRatio(); ?>'
+							>Установите нормальный браузер</canvas>
+				</div>
+			<?php endfor; ?>
+		</div>
 	</div>
 	<div class="col-md-3">
 		<div class="">
@@ -37,19 +49,14 @@
 					<i class="glyphicon glyphicon-plus"></i>
 				</a>
 			</div>
-			<hr />
-			<canvas id="rotated" class="hidden"></canvas>
 		</div>
 	</div>
 </div>
 <script>
-	var backgroundSrc = "<?= $model->getDocumentImage(); ?>";
-	var barcodeSrc = "<?= $model->getBarcodeImage(); ?>";
-
-	var documentWidth = <?= $model->getDocumentWidth(); ?>;
-	var documentHeight = <?= $model->getDocumentHeight(); ?>;
-
+	var Images = [
+<?php foreach ($model->getImages() as $image): ?>
+			"<?= $image; ?>"
+<?php endforeach; ?>
+	];
 	var resizeRatio = <?= $model->getResizeRatio(); ?>
-
-
 </script>

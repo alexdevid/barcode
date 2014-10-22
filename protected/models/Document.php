@@ -17,6 +17,7 @@ class Document extends BaseModel
 	const TYPE_PDF = 'application/pdf';
 	const TYPE_PNG = 'image/png';
 	const TYPE_JPEG = 'image/jpeg';
+	const DIMENSIONS = 1500;
 
 	public $displayWidth = 500;
 	public $barcode = NULL;
@@ -29,18 +30,74 @@ class Document extends BaseModel
 		return '{{document}}';
 	}
 
-	public function generateFromPDF()
+	public function saveDocument()
 	{
-		$im = new imagick();
+		mkdir($this->getDocumentDir(), 0777);
+
+		$this->document->saveAs($this->getDocumentDir() . $this->document);
+
+		if ($this->isPDF()) {
+			$this->savePDF();
+		} else {
+			$this->saveJPEG();
+		}
+	}
+
+	public function saveJPEG()
+	{
+		$image = new Imagick($this->getDocumentPath());
+		$image->scaleImage(self::DIMENSIONS, self::DIMENSIONS, true);
+		$image->writeimage($this->getDocumentDir() . 'page[0]' . '.jpg');
+	}
+
+	public function savePDF()
+	{
+		$im = new imagick($this->getDocumentDir() . $this->document);
 		$im->setresolution(300, 300);
-		$im->readimage($this->getDocumentImagePath() . '[0]');
-		$im->setImageCompression(imagick::COMPRESSION_LOSSLESSJPEG);
-		$im->setImageCompressionQuality(100);
-		$im->setImageFormat('jpg');
-		$im->writeImage($this->getDocumentImagePath() . '.jpg');
+
+		$num_pages = $im->getNumberImages();
+
+
+		for ($i = 0; $i < $num_pages; $i++) {
+			$im->readimage($this->getDocumentDir() . $this->document . '[' . $i . ']');
+			$im->setImageCompression(imagick::COMPRESSION_LOSSLESSJPEG);
+			$im->setImageCompressionQuality(100);
+			$im->setImageFormat('jpg');
+
+			$im->writeImage($this->getDocumentDir() . 'page[' . $i . '].jpg');
+
+			$image = new Imagick($this->getDocumentDir() . 'page[' . $i . '].jpg');
+			$image->scaleImage(self::DIMENSIONS, self::DIMENSIONS, true);
+			$image->writeimage($this->getDocumentDir() . 'page[' . $i . '].jpg');
+		}
+
+
 		$im->clear();
 		$im->destroy();
-		return $this->document . '.jpg';
+
+		return $this->document;
+	}
+
+	public function getImages()
+	{
+		$iterator = new DirectoryIterator($this->getDocumentDir());
+		$images = [];
+		foreach ($iterator as $file) {
+			if ($file->isDot()) {
+				continue;
+			}
+
+			if (substr($file->getFilename(), 0, 4) === "page") {
+				$images[] = $this->getDocumentWebDir() . $file->getFilename();
+			}
+		}
+
+		return $images;
+	}
+
+	public function getImage($index)
+	{
+		return $this->getDocumentWebDir() . 'page[' . $index . '].jpg';
 	}
 
 	public function getResizeRatio()
@@ -48,31 +105,26 @@ class Document extends BaseModel
 		return $this->getDocumentWidth() / $this->displayWidth;
 	}
 
-	public function isPdf()
+	public function isPDF()
 	{
-		return pathinfo($this->getDocumentImagePath(), PATHINFO_EXTENSION) == 'pdf';
+		return pathinfo($this->getDocumentDir() . $this->document, PATHINFO_EXTENSION) == 'pdf';
 	}
 
 	public function getDocumentWidth()
 	{
-		$size = getimagesize($this->getDocumentImagePath());
+		$size = getimagesize($this->getDocumentDir() . 'page[0].jpg');
 		return $size[0];
 	}
 
 	public function getDocumentHeight()
 	{
-		$size = getimagesize($this->getDocumentImagePath());
+		$size = getimagesize($this->getDocumentDir() . 'page[0].jpg');
 		return $size[1];
 	}
 
-	public function getDocumentImagePath()
+	public function getDocumentWebDir()
 	{
-		return Yii::getPathOfAlias('webroot') . Document::FILE_DIR . $this->id . DIRECTORY_SEPARATOR . $this->document;
-	}
-
-	public function getDocumentImage()
-	{
-		return self::FILE_DIR . $this->id . DIRECTORY_SEPARATOR . $this->document;
+		return self::FILE_DIR . DIRECTORY_SEPARATOR . $this->id . DIRECTORY_SEPARATOR;
 	}
 
 	public function getBarcodeImage()
@@ -80,22 +132,23 @@ class Document extends BaseModel
 		return self::FILE_DIR . $this->id . DIRECTORY_SEPARATOR . 'barcode.png';
 	}
 
+	public function getDocumentPath()
+	{
+		return $this->getDocumentDir() . $this->document;
+	}
+
+	public function getDocumentDir()
+	{
+		return Yii::getPathOfAlias('webroot') . Document::FILE_DIR . $this->id . DIRECTORY_SEPARATOR;
+	}
+
 	public function generateBarcode()
 	{
-		$this->resizeImage(1500);
-
 		$height = 120;
 		$fontSize = 12;
 		$barcode = new Barcode($this->generateCode(), $height, Yii::getPathOfAlias('webroot.web.fonts') . '/OpenSans-Regular.ttf', $fontSize);
 		$barcode->setPixelWidth(1);
 		$barcode->saveBarcode(Yii::getPathOfAlias('webroot') . Document::FILE_DIR . $this->id . DIRECTORY_SEPARATOR . 'barcode.png');
-	}
-
-	public function resizeImage($maxDimensions = 1500)
-	{
-		$image = new Imagick($this->getDocumentImagePath());
-		$image->scaleImage($maxDimensions, $maxDimensions, true);
-		$image->writeimage($this->getDocumentImagePath());
 	}
 
 	/**

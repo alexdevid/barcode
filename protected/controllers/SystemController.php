@@ -26,14 +26,7 @@ class SystemController extends BaseController
 			$model->document = CUploadedFile::getInstance($model, 'document');
 
 			if ($model->save()) {
-				$path = Yii::getPathOfAlias('webroot') . Document::FILE_DIR . $model->id;
-				mkdir($path);
-				$model->document->saveAs($path . DIRECTORY_SEPARATOR . $model->document);
-
-				if ($model->isPdf()) {
-					$model->document = $model->generateFromPDF();
-				}
-
+				$model->saveDocument();
 				$model->generateBarcode();
 			}
 		}
