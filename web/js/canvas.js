@@ -60,40 +60,6 @@
 		 */
 		Barcode.prototype.bindEvents = function() {
 
-			/**
-			 *
-			 */
-			$('#save').click($.proxy(function(e) {
-				e.preventDefault();
-				var image = window.open();
-				image.document.write('<img src="' + this.getBarcodedImage() + '"/>');
-			}, this));
-
-			/**
-			 *
-			 */
-			$('#print').click($.proxy(function(e) {
-				e.preventDefault();
-				var image = window.open();
-				image.document.write('<img src="' + this.getBarcodedImage() + '"/>');
-				image.print();
-
-			}, this));
-
-			/**
-			 *
-			 */
-			$('#rotate').click($.proxy(function(e) {
-				e.preventDefault();
-
-				this.BarcodeImage.animate('angle', '+=90', {
-					onChange: this.Canvas.renderAll.bind(this.Canvas),
-					duration: 100
-				});
-
-			}, this));
-
-			return this;
 		};
 
 		/**
@@ -111,9 +77,50 @@
 		return Barcode;
 	})();
 
+	var Scenes = [];
+
 	for (var i = 0; i < Images.length; i++) {
-		new Barcode('canvas_' + i, resizeRatio, Images[i]);
+		Scenes.push(new Barcode('canvas_' + i, resizeRatio, Images[i]));
 	}
+	var ActiveScene = Scenes[0];
+
+	$('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+		ActiveScene = Scenes[$(e.target).attr('data-id')];
+	});
+
+	/**
+	 *
+	 */
+	$('#save').click(function(e) {
+		e.preventDefault();
+		var image = window.open();
+		image.document.write('<img src="' + ActiveScene.getBarcodedImage() + '"/>');
+	});
+
+	/**
+	 *
+	 */
+	$('#print').click(function(e) {
+		e.preventDefault();
+		var image = window.open();
+		image.document.write('<img src="' + ActiveScene.getBarcodedImage() + '"/>');
+		image.print();
+
+	});
+
+	/**
+	 *
+	 */
+	$('#rotate').click(function(e) {
+		e.preventDefault();
+
+		ActiveScene.BarcodeImage.animate('angle', '+=90', {
+			onChange: ActiveScene.Canvas.renderAll.bind(ActiveScene.Canvas),
+			duration: 100
+		});
+
+	});
+
 	$('[data-toggle="popover"]').popover({container: 'body'});
 
 })();

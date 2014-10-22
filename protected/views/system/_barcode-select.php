@@ -19,7 +19,9 @@
 		<ul class="nav nav-tabs" role="tablist">
 			<?php $images = $model->getImages(); ?>
 			<?php for ($i = 0; $i < count($images); $i++): ?>
-				<li class="<?= $i == 0 ? 'active' : ''; ?>"><a href="#page_<?= $i; ?>" role="tab" data-toggle="tab"><?= $i; ?></a></li>
+				<li class="<?= $i == 0 ? 'active' : ''; ?>">
+					<a href="#page_<?= $i; ?>" role="tab" data-toggle="tab" data-id="<?= $i; ?>"><?= $i; ?></a>
+				</li>
 			<?php endfor; ?>
 		</ul>
 		<div class="tab-content">
@@ -39,12 +41,17 @@
 				<button class="btn btn-info" id="rotate" data-toggle="popover" data-placement="right" data-trigger="hover" data-content="Повернуть штрих-код">
 					<i class="glyphicon glyphicon-repeat"></i>
 				</button>
-				<a href="#" class="btn btn-info" id="save" data-toggle="popover" data-placement="right" data-trigger="hover" data-content="Скачать" download="<?= $model->generateCode(); ?>">
+				<a href="#" class="btn btn-info" id="save" data-toggle="popover" data-placement="right" data-trigger="hover" data-content="Скачать страницу" download="<?= $model->generateCode(); ?>">
 					<i class="glyphicon glyphicon-save"></i>
 				</a>
-				<a href="#" class="btn btn-info" id="print" data-toggle="popover" data-placement="right" data-trigger="hover" data-content="Печатать">
+				<a href="#" class="btn btn-info" id="print" data-toggle="popover" data-placement="right" data-trigger="hover" data-content="Печатать страницу">
 					<i class="glyphicon glyphicon-print"></i>
 				</a>
+				<!--
+				<a href="#" class="btn btn-info" id="save" data-toggle="popover" data-placement="right" data-trigger="hover" data-content="Скачать все архивом" download="<?= $model->generateCode(); ?>">
+					<i class="glyphicon glyphicon-compressed"></i>
+				</a>
+				-->
 				<a href="<?= Yii::app()->createUrl('system/index'); ?>" class="btn btn-success" id="print" data-toggle="popover" data-placement="right" data-trigger="hover" data-content="Сделать еще">
 					<i class="glyphicon glyphicon-plus"></i>
 				</a>

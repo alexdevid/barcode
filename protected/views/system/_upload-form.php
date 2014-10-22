@@ -19,7 +19,7 @@
 		<div class="col-md-8">
 			<div class="form-group">
 				<?php echo $form->label($model, 'document'); ?>
-				<?php echo $form->fileField($model, 'document', ['class' => 'form-control']) ?>
+				<?php echo $form->fileField($model, 'document', ['class' => 'upload-control']) ?>
 			</div>
 		</div>
 		<div class="col-md-4 text-right">

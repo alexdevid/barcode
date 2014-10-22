@@ -22,3 +22,7 @@ canvas#hidden {
 	background-color: #3498db;
 	border-color: #3498db;
 }
+
+.upload-control {
+	margin-top: 10px;
+}

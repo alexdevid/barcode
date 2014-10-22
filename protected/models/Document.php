@@ -92,7 +92,7 @@ class Document extends BaseModel
 			}
 		}
 
-		return $images;
+		return array_reverse($images);
 	}
 
 	public function getImage($index)
