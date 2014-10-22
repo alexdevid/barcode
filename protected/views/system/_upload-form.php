@@ -23,7 +23,7 @@
 			</div>
 		</div>
 		<div class="col-md-4 text-right">
-			<?php echo CHtml::submitButton('Отправить', ['class' => 'btn btn-primary form-submit']); ?>
+			<?php echo CHtml::submitButton('Отправить', ['class' => 'btn btn-primary form-submit', 'id' => 'uploadBtn']); ?>
 		</div>
 	</div>
 	<?php $this->endWidget();

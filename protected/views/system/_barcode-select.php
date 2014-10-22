@@ -16,11 +16,6 @@
 		</div>
 	</div>
 	<div class="col-md-6 text-center">
-		<img src="<?= $model->getDocumentImage(); ?>"
-			 width='<?= $model->getDocumentWidth(); ?>'
-			 height='<?= $model->getDocumentHeight(); ?>'
-			 id="document" class="hidden">
-
 		<canvas id="canvas"
 				width='<?= $model->getDocumentWidth() / $model->getResizeRatio(); ?>'
 				height='<?= $model->getDocumentHeight() / $model->getResizeRatio(); ?>'

@@ -26,28 +26,32 @@
 				height: this.Canvas.height
 			});
 
-			this.BarcodeImage = this.barcodeImage();
-			this.Canvas.add(this.BarcodeImage);
-
+			this.setBarcodeImage();
 			this.bindEvents();
 		}
 
-		Barcode.prototype.barcodeImage = function() {
+		Barcode.prototype.setBarcodeImage = function() {
 
 			var BarcodeElement = document.getElementById('barcode');
-			var BarcodeImage = new fabric.Image(BarcodeElement, {
-				left: (this.Canvas.width) / 2,
-				top: 50,
-				width: BarcodeElement.width / this.resizeRatio,
-				height: BarcodeElement.height / this.resizeRatio,
-				lockScalingX: true,
-				lockScalingY: true,
-				hasControls: false,
-				originX: 'center',
-				originY: 'center'
-			});
 
-			return BarcodeImage;
+			var _this = this;
+			var BarcodeImage = fabric.Image.fromURL(barcodeSrc, function(Image) {
+				Image.setOptions({
+					left: (_this.Canvas.width) / 2,
+					top: 50,
+					width: BarcodeElement.width / _this.resizeRatio,
+					height: BarcodeElement.height / _this.resizeRatio,
+					lockScalingX: true,
+					lockScalingY: true,
+					hasControls: false,
+					originX: 'center',
+					originY: 'center'
+				});
+
+				_this.BarcodeImage = Image;
+				_this.Canvas.add(Image);
+
+			});
 		};
 
 		/**
@@ -107,7 +111,10 @@
 		return Barcode;
 	})();
 
-	new Barcode('canvas', resizeRatio);
+	if (document.getElementById('canvas')) {
+		new Barcode('canvas', resizeRatio);
+	}
+
 
 	$('[data-toggle="popover"]').popover({container: 'body'});
 
