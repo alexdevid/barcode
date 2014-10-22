@@ -124,7 +124,7 @@ class Document extends BaseModel
 
 	public function getDocumentWebDir()
 	{
-		return self::FILE_DIR . DIRECTORY_SEPARATOR . $this->id . DIRECTORY_SEPARATOR;
+		return self::FILE_DIR . $this->id . DIRECTORY_SEPARATOR;
 	}
 
 	public function getBarcodeImage()

@@ -24,7 +24,7 @@
 		</ul>
 		<div class="tab-content">
 			<?php for ($a = 0; $a < count($images); $a++): ?>
-				<div class="tab-pane <?= ($a == 0) ? 'active' : ''; ?>" id="page_<?= $i; ?>">
+				<div class="tab-pane <?= ($a == 0) ? 'active' : ''; ?>" id="page_<?= $a; ?>">
 					<canvas id="canvas_<?= $a; ?>"
 							width='<?= $model->getDocumentWidth() / $model->getResizeRatio(); ?>'
 							height='<?= $model->getDocumentHeight() / $model->getResizeRatio(); ?>'
@@ -55,7 +55,7 @@
 <script>
 	var Images = [
 <?php foreach ($model->getImages() as $image): ?>
-			"<?= $image; ?>"
+			"<?= $image; ?>",
 <?php endforeach; ?>
 	];
 	var resizeRatio = <?= $model->getResizeRatio(); ?>
