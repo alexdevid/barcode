@@ -16,14 +16,16 @@
 		</div>
 	</div>
 	<div class="col-md-6 text-center">
-		<ul class="nav nav-tabs" role="tablist">
-			<?php $images = $model->getImages(); ?>
-			<?php for ($i = 0; $i < count($images); $i++): ?>
-				<li class="<?= $i == 0 ? 'active' : ''; ?>">
-					<a href="#page_<?= $i; ?>" role="tab" data-toggle="tab" data-id="<?= $i; ?>"><?= $i+1; ?></a>
-				</li>
-			<?php endfor; ?>
-		</ul>
+		<?php $images = $model->getImages(); ?>
+		<?php if (count($images) > 1): ?>
+			<ul class="nav nav-tabs" role="tablist">
+				<?php for ($i = 0; $i < count($images); $i++): ?>
+					<li class="<?= $i == 0 ? 'active' : ''; ?>">
+						<a href="#page_<?= $i; ?>" role="tab" data-toggle="tab" data-id="<?= $i; ?>"><?= $i + 1; ?></a>
+					</li>
+				<?php endfor; ?>
+			</ul>
+		<?php endif; ?>
 		<div class="tab-content">
 			<?php for ($a = 0; $a < count($images); $a++): ?>
 				<div class="text-center tab-pane <?= ($a == 0) ? 'active' : ''; ?>" id="page_<?= $a; ?>">
@@ -49,11 +51,11 @@
 				<a href="#" class="btn btn-info" id="print" data-toggle="popover" data-placement="right" data-trigger="hover" data-content="Печатать страницу">
 					<i class="glyphicon glyphicon-print"></i>
 				</a>
-
-				<a href="#" class="btn btn-info" id="saveBulk" data-toggle="popover" data-placement="right" data-trigger="hover" data-content="Скачать все архивом" download="<?= $model->generateCode(); ?>">
-					<i class="glyphicon glyphicon-compressed"></i>
-				</a>
-
+				<?php if (count($images) > 1): ?>
+					<a href="#" class="btn btn-info" id="saveBulk" data-toggle="popover" data-placement="right" data-trigger="hover" data-content="Скачать все архивом" download="<?= $model->generateCode(); ?>">
+						<i class="glyphicon glyphicon-compressed"></i>
+					</a>
+				<?php endif; ?>
 				<a href="<?= Yii::app()->createUrl('system/index'); ?>" class="btn btn-success" id="print" data-toggle="popover" data-placement="right" data-trigger="hover" data-content="Сделать еще">
 					<i class="glyphicon glyphicon-plus"></i>
 				</a>

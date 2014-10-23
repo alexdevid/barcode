@@ -125,7 +125,7 @@
 
 		$('#saveBulk').click(function(e) {
 			e.preventDefault();
-
+			$(this).find('.glyphicon').removeClass('glyphicon-compressed').addClass('glyphicon-refresh').addClass('rotate');
 			var images = [];
 			for (var i = 0; i < Scenes.length; i++) {
 				images.push(Scenes[i].getBarcodedImage());
@@ -139,12 +139,17 @@
 					images: images
 				},
 				success: function(data) {
-					if (data.substr(data.length - 3) === 'zip') {
-						document.getElementById("downloadFrame").src = data;
-					} else {
-						$('#saveBulk').addClass('disabled');
-						console.log(data);
-					}
+					document.getElementById("downloadFrame").src = '/userfiles/' + uid + '/archive.zip';
+					$('#saveBulk').find('.glyphicon').removeClass('glyphicon-refresh').removeClass('rotate').addClass('glyphicon-compressed');
+				},
+				error: function(data) {
+					$('#saveBulk').find('.glyphicon')
+							.removeClass('glyphicon-refresh')
+							.removeClass('rotate')
+							.addClass('glyphicon-exclamation-sign')
+							.attr('data-content', 'Ошибка');
+
+					console.log(data);
 				}
 			});
 
