@@ -139,7 +139,12 @@
 					images: images
 				},
 				success: function(data) {
-					window.location.assign(data);
+					if (data.substr(data.length - 3) === 'zip') {
+						document.getElementById("downloadFrame").src = data;
+					} else {
+						$('#saveBulk').addClass('disabled');
+						console.log(data);
+					}
 				}
 			});
 

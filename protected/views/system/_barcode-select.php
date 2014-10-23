@@ -57,11 +57,11 @@
 				<a href="<?= Yii::app()->createUrl('system/index'); ?>" class="btn btn-success" id="print" data-toggle="popover" data-placement="right" data-trigger="hover" data-content="Сделать еще">
 					<i class="glyphicon glyphicon-plus"></i>
 				</a>
-				<iframe id="downloadArchive" style="display:none"></iframe>
 			</div>
 		</div>
 	</div>
 </div>
+<iframe width="1" height="1" frameborder="0" src="#" id="downloadFrame"></iframe>
 <script>
 	var Images = [
 <?php foreach ($model->getImages() as $image): ?>
