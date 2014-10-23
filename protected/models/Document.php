@@ -91,8 +91,8 @@ class Document extends BaseModel
 				$images[] = $this->getDocumentWebDir() . $file->getFilename();
 			}
 		}
-
-		return array_reverse($images);
+		sort($images);
+		return $images;
 	}
 
 	public function getImage($index)

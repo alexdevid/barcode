@@ -20,13 +20,15 @@
 			<?php $images = $model->getImages(); ?>
 			<?php for ($i = 0; $i < count($images); $i++): ?>
 				<li class="<?= $i == 0 ? 'active' : ''; ?>">
-					<a href="#page_<?= $i; ?>" role="tab" data-toggle="tab" data-id="<?= $i; ?>"><?= $i; ?></a>
+					<a href="#page_<?= $i; ?>" role="tab" data-toggle="tab" data-id="<?= $i; ?>"><?= $i+1; ?></a>
 				</li>
 			<?php endfor; ?>
 		</ul>
 		<div class="tab-content">
 			<?php for ($a = 0; $a < count($images); $a++): ?>
-				<div class="tab-pane <?= ($a == 0) ? 'active' : ''; ?>" id="page_<?= $a; ?>">
+				<div class="text-center tab-pane <?= ($a == 0) ? 'active' : ''; ?>" id="page_<?= $a; ?>">
+					<i class="glyphicon glyphicon-refresh rotate preloader"
+					   style="top: <?= (($model->getDocumentHeight() / $model->getResizeRatio()) / 2) - 10; ?>; left: <?= (($model->getDocumentWidth() / $model->getResizeRatio()) / 2) - 10; ?>"></i>
 					<canvas id="canvas_<?= $a; ?>"
 							width='<?= $model->getDocumentWidth() / $model->getResizeRatio(); ?>'
 							height='<?= $model->getDocumentHeight() / $model->getResizeRatio(); ?>'
@@ -47,11 +49,11 @@
 				<a href="#" class="btn btn-info" id="print" data-toggle="popover" data-placement="right" data-trigger="hover" data-content="Печатать страницу">
 					<i class="glyphicon glyphicon-print"></i>
 				</a>
-				<!--
+
 				<a href="#" class="btn btn-info" id="saveBulk" data-toggle="popover" data-placement="right" data-trigger="hover" data-content="Скачать все архивом" download="<?= $model->generateCode(); ?>">
 					<i class="glyphicon glyphicon-compressed"></i>
 				</a>
-				-->
+
 				<a href="<?= Yii::app()->createUrl('system/index'); ?>" class="btn btn-success" id="print" data-toggle="popover" data-placement="right" data-trigger="hover" data-content="Сделать еще">
 					<i class="glyphicon glyphicon-plus"></i>
 				</a>

@@ -19,7 +19,16 @@
 		<div class="col-md-8">
 			<div class="form-group">
 				<?php echo $form->label($model, 'document'); ?>
-				<?php echo $form->fileField($model, 'document', ['class' => 'upload-control']) ?>
+				<?php
+				echo $form->fileField($model, 'document', [
+					'class' => 'upload-control',
+					'data-toggle' => "popover",
+					"data-placement" => "left",
+					"data-trigger" => "hover",
+					"title" => "Допустимые форматы",
+					"data-content" => "JPG, PNG, PDF"
+				])
+				?>
 			</div>
 		</div>
 		<div class="col-md-4 text-right">
@@ -28,13 +37,13 @@
 			</button>
 		</div>
 	</div>
-	<?php $this->endWidget();
-	?>
+<?php $this->endWidget();
+?>
 </div>
 <div class="col-sm-3">
 	<?php if ($model->hasErrors()): ?>
-		<?php echo $form->errorSummary($model, '', '', array('class' => 'alert alert-danger')); ?>
-	<?php endif; ?>
+	<?php echo $form->errorSummary($model, '', '', array('class' => 'alert alert-danger')); ?>
+<?php endif; ?>
 </div>
 <script>
 	var runCanvas = false;

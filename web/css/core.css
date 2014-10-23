@@ -10,12 +10,6 @@ body {
 	padding: 9px 20px;
 	float: right;
 }
-#canvas {
-	border: 2px solid #999;
-	background-image: url(/web/images/ajax-loader.gif);
-	background-repeat: no-repeat;
-	background-position: center center;
-}
 canvas#hidden {
 	position: absolute;
 	top: 0;
@@ -32,7 +26,9 @@ canvas#hidden {
 .upload-control {
 	margin-top: 10px;
 }
-
+.canvas-container {
+	display: inline-block;
+}
 .rotate {
 	-webkit-animation: spin 2s infinite linear;
 	animation: spin 2s infinite linear;
@@ -57,4 +53,13 @@ canvas#hidden {
 		-webkit-transform: rotate(359deg);
 		transform: rotate(359deg);
 	}
+}
+input.error {
+	border: 2px solid #e74c3c;
+}
+.tab-pane {
+	position: relative;
+}
+.preloader {
+	position: absolute;
 }
